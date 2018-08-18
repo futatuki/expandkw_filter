@@ -1,0 +1,21 @@
+# $Id$
+
+# Default keyword format:
+#
+# default_kw = { 'Date'               : '%D',
+#                 'LastChangeDate'     : '%D',
+#                 'Revision'           : '%r',
+#                 'LastChangeRevision' : '%r',
+#                 'Rev'                : '%r',
+#                 'Author'             : '%a',
+#                 'LastChangedBy'      : '%a',
+#                 'HeadURL'            : '%u',
+#                 'URL'                : '%u',
+#                 'Id'                 : '%I',
+#                 'Header'             : '%H'}
+
+# custom keyword definition
+custom_kw = {
+    'expandkw.py'          : { 'yfId'  : '%I' },
+    'kw_conf.py'           : { 'Id'    : '%p%_%r%_%d%_%a',
+                               'yfId'  : '%I' } }

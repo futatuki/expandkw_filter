@@ -1,0 +1,122 @@
+NAME
+    expandkw.py - a filter driver to expand subversion like keyword for git
+
+SYNOPSIS
+    git config filter.expandkw.smudge 'python <script-path>/expandkw.py -s %f'
+    git config filter.expandkw.clean 'python <script-path>/expandkw.py -c %f'
+
+DESCRIPTION
+    This is a Python script to expand/unexpand subversion like keyword act
+    as smudge/clean git filter driver. Please see 'filter' section in
+    'git help attributes' for detail how it works. This script requires
+    Python (tested on 2.7/3.6/3.7).
+
+OPTIONS
+
+    -s, --smudge
+        Act as 'smudge' filter driver. Expand keywords enclosed by a pair
+        of '$' characters. This is default behavior.
+
+    -c, --clean
+        Act as 'clean' filter driver. Unexpand keywords enclosed by a pair 
+        of '$' characters.
+
+    -e, --encoding
+        Specify target file encoding to help to parse file.
+
+    -h, --help
+        show option summary (and exit).
+
+KEYWORD EXPANSION
+    Keyword expantion allows to embed commit information of the file.
+    All occurence of keywords enclosed by two '$' character like
+    '$Date$' are expanded to keywords with commit information, e.g. 
+    '$Date: 2018-08-18 18:36:56 +0900 (Sun, 18 Aug 2018) $'.  Fixed-length
+    keyword syntax like '$keyword::        $' is also available.
+
+    This filter driver provides following pre-defined keywords:
+
+        Date, LastChangeDate
+            Author date in local time zone, in the form 
+            $Date: 2018-08-18 18:36:56 +0900 (Sun, 18 Aug 2018) $'.
+
+        Revision, LastChangeRevision, Rev
+            Abbreviated commit hash, e.g. $Revision: 6e6c9e1 $
+
+        Author, LastChangedBy
+            Author E-Mail address encosed by <>,
+            e.g. $Author: <futatuki@yf.bsdclub.org> $
+
+        HeadURL, URL
+            Full path to the file in working tree, as file:// URL.
+            e.g. $URL: file:///path/to/the/file $
+
+        Id
+            A compressd combination of file path, abbreviated commit hash,
+            author date in UTC, author E-Mail address, in the form
+            $Id: file 6e6c9e1 2018-08-10 09:36:56Z <futatuki@yf.bsdclub.org> $
+
+        Header
+            Similar to the `Id' keyword but uses file URL of the file instead
+            of file name base. e.g.  $Header: file:///path/to/file 6e6c9e1
+            2018-08-10 09:36:56Z <futatuki@yf.bsdclub.org> $ (without folding)
+
+CUSTOM KEYWORD
+    Instead to use pre-defined keywords, you can define custom keywords
+    by using optional module file kw_conf.py, by defining a dict
+    kw_conf.default_kw, its keys are keyword names and its values are
+    corresponding expansion format string. Note if you use kw_conf.default_kw
+    with pre-defined keyword above, you must redifine them in the dictionary.
+    Please see kw_conf.py.sample (or expandkw.py itself) for how pre-defined
+    keywords defined. 
+
+    You can also define per file keywords by using dict kw_config.custom_kw,
+    its keys are file path and its values are dict of keyword name to format
+    string, just like kw_conf.default_kw.
+
+    In the format strings following placeholders are available.
+
+        %a      author E-Mail address enclosed by <>
+
+        %b      The basename of the file path
+                (file name without directory components) 
+
+        %d      Short format of the date of the commit in UTC
+
+        %D      Long format of the date of the commit in local time zone,
+                in the form of 'Date' keyword expands.
+
+        %P      The file's path, relative to the top of the repository
+
+        %r      Abbreviated commit hash
+
+        %R      Full path to the top of the repository, as file:// URL.
+
+        %u      Full path to the file in working tree, as file:// URL.
+
+        %_      A space character. (currently as the format string is
+                defined as Python string literal in dict object, it allows
+                to contain space characters, though)
+
+        %%      A percent character ('%')
+
+        %H      Equivalent to '%P%_%r%_%d%_%a'.
+
+        %I      Equivalent to '%b%_%r%_%d%_%a'.
+
+BUGS
+    File path (URL) expansion cannot be unexpanded if its components contains
+    new line character or dollar sign ('$') because they are expand without 
+    escape or quote, thus we can't parse keyword expansion boundary.
+    Author E-Mail address contains dollar sign also cannot be unexpanded.
+
+SEE ALSO
+    git(1), gitattributes(5),
+    'Pro Git - 8.2 Customizing Git - Git Attributes'[1],
+    'Version Control with Subversion - Keyword Substitution'[2]
+
+[1] https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes
+[2] http://svnbook.red-bean.com/nightly/en/svn.advanced.props.special.keywords.html
+
+AUTHORS
+    Yasuhito FUTATSUKI <futatuki@yf.bsdclub.org>

@@ -195,7 +195,8 @@ _f = { 'a' : (lambda pt, gd: '<' + gd['ae'] + '>'),
        'P' : (lambda pt, gd: os.path.join(gd['gp'], pt)),
        'r' : (lambda pt, gd: gd['H'][0:7]),
        'R' : (lambda pt, gd: gd['gt']),
-       'u' : (lambda pt, gd: os.path.join(gd['gt'], gd['gp'], pt)),
+       'u' : (lambda pt, gd:
+                'file:///' + os.path.join(gd['gt'], gd['gp'], pt)),
        '_' : (lambda pt, gd: ' '),
        '%' : (lambda pt, gd: '%'),
        'H' : (lambda pt, gd:

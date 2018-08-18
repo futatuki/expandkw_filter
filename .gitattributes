@@ -1,1 +1,2 @@
-expandkw.py filter=expandkw
+expandkw.py       filter=expandkw
+kw_conf.py.sample filter=expandkw

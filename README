@@ -110,6 +110,14 @@ BUGS
     escape or quote, thus we can't parse keyword expansion boundary.
     Author E-Mail address contains dollar sign also cannot be unexpanded.
 
+    When checkout file other than current branch or from commit other than
+    HEAD, expandkw.py cannot embed correct information. This is because 
+    git calls filter.<driver>.smudge *before* update meta data about
+    current working tree, and there is no interface to pass which commit
+    to be checked out to smudge filter. To expand with correct information,
+    do 'git checkout HEAD' (or 'git checkout <current commit>') again,
+    after switching working tree.
+
 SEE ALSO
     git(1), gitattributes(5),
     'Pro Git - 8.2 Customizing Git - Git Attributes'[1],

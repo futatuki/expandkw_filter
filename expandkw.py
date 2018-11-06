@@ -108,10 +108,10 @@ except AttributeError:
                 return 'UTC'
             elif self._offset > datetime.timedelta(0):
                 return 'UTC+%02d%02d'% (self._offset.seconds // 3600,
-                                        self._offset.seconds % 3600)
+                                        (self._offset.seconds % 3600) // 60)
             else:
                 return 'UTC-%02d%02d'% ((- self._offset.seconds) // 3600,
-                                        (- self._offset.seconds) % 3600)
+                                        ((- self._offset.seconds) % 3600) //60)
 
 def parse_iso8601(dtstr):
     try:
